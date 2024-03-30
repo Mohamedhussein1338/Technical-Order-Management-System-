@@ -1,0 +1,9 @@
+id,name,model_id:id,group_id:id,perm_read,perm_write,perm_create,perm_unlink
+technical_order_module.technical_order,access_technical_order,technical_order_module.model_technical_order,,1,1,1,1
+technical_order_module.technical_order_line,access_technical_order_line,technical_order_module.model_technical_order_line,,1,1,1,1
+technical_order_module.technical_wizard,access_technical_wizard,technical_order_module.model_technical_wizard,,1,1,1,1
+
+
+
+
+

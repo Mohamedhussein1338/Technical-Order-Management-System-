@@ -1,0 +1,166 @@
+<odoo>
+    <data>
+        <record model="ir.ui.view" id="technical_order_tree">
+            <field name="name">technical order list</field>
+            <field name="model">technical.order</field>
+            <field name="arch" type="xml">
+                <tree string="technical order">
+                    <field name="name"/>
+                    <field name="sequence"/>
+                    <field name="requested_by"/>
+                    <field name="start_date"/>
+                    <field name="end_date"/>
+                    <field name="status"
+                           decoration-info="status == 'draft'"
+                           decoration-danger="status == 'to_be_approved'"
+                           decoration-warning="status == 'approve'"
+                           decoration-muted="status=='reject'"
+                           decoration-success="status == 'cancel'"/>
+                </tree>
+            </field>
+        </record>
+        <record id="technical_order_form_view" model="ir.ui.view">
+            <field name="name">technical.order.form</field>
+            <field name="model">technical.order</field>
+            <field name="arch" type="xml">
+                <form>
+                    <header>
+                        <button string="Submit for Approval"
+                                type="object"
+                                name="action_submit_for_approval"
+                                attrs="{'invisible': [('status', '!=', 'draft')]}"/>
+
+                        <button string="Cancel"
+                                type="object"
+                                name="action_cancel"
+                                attrs="{'invisible': [('status', '!=', 'draft')]}"/>
+
+                        <button string="Approve"
+                                type="object"
+                                name="action_approve"
+                                attrs="{'invisible': [('status', '!=', 'to_be_approved')]}"
+                                groups="technical_order_module.group_manager_technical_id"
+                                class="oe_highlight"/>
+
+                        <button string="Reject"
+                                type="object"
+                                name="action_reject"
+                                attrs="{'invisible': [('status', '!=', 'to_be_approved')]}"
+                                groups="technical_order_module.group_manager_technical_id"
+                                class="oe_highlight"/>
+
+                        <button string="Reset to Draft"
+                                type="object"
+                                name="action_reset_to_draft"
+                                attrs="{'invisible': [('status', '!=', 'cancel')]}"
+                                class="oe_highlight"/>
+
+                        <button string="Create SO"
+                                type="object"
+                                name="create_sale_order"
+                                attrs="{'invisible': ['|',('status', '!=', 'approve'), ('zero_remaining_quantity', '=', True)]}"
+                                class="oe_highlight"/>
+
+                        <field name="status" widget="statusbar"/>
+                    </header>
+                    <sheet>
+                        <div class="oe_button_box" name="button_box">
+                            <button name="view_sale_order"
+                                    type="object"
+                                    class="oe_stat_button"
+                                    icon="fa-th-list"
+                                    attrs="{'invisible': [('status', '!=', 'approve')]}">
+                                <field name="sales_order_count" string="Technical Orders" widget="statinfo"/>
+                            </button>
+                        </div>
+                        <div class="oe_title">
+                            <h1>
+                                <field name="sequence"/>
+                            </h1>
+                        </div>
+                        <group>
+                            <group>
+                                <field name="name"
+                                       attrs="{'readonly':[('status','in',('approve','reject','cancel'))]}"/>
+
+                                <field name="requested_by"
+                                       widget="many2one_avatar_user"
+                                       attrs="{'readonly':[('status','in',('approve','reject','cancel'))]}"/>
+
+                                <field name="customer"
+                                       attrs="{'readonly':[('status','in',('approve','reject','cancel'))]}"/>
+                            </group>
+                            <group>
+                                <field name="start_date"
+                                       default="today"
+                                       attrs="{'readonly':[('status','in',('approve','reject','cancel'))]}"/>
+                                <field name="end_date"
+                                       attrs="{'readonly':[('status','in',('approve','reject','cancel'))]}"/>
+                            </group>
+                            <group>
+                                <field name="rejection_reason"
+                                       readonly="1"
+                                       attrs="{'invisible': [('status', '!=', 'reject')]}"/>
+                                <field name="zero_remaining_quantity" invisible="1"/>
+
+                            </group>
+                        </group>
+                        <notebook>
+                            <page string="technical order Lines">
+                                <field name="order_lines_ids"
+                                       attrs="{'readonly':[('status','in',('approve','reject','cancel'))]}">
+                                    <tree editable="top">
+                                        <field name="product_id"/>
+                                        <field name="description"/>
+                                        <field name="quantity"/>
+                                        <field name="cost_price"/>
+                                        <field name="total"/>
+                                        <field name="remaining_quantity"/>
+                                    </tree>
+                                </field>
+                                <group name="note_group" col="6" class="mt-2 mt-md-0">
+                                    <group class="oe_subtotal_footer oe_right" colspan="2" name="technical_total">
+                                        <field name="total_price" nolabel="1" colspan="2" readonly="1"/>
+                                    </group>
+                                    <div class="clearfix"/>
+                                </group>
+                            </page>
+                        </notebook>
+                    </sheet>
+                    <div class="oe_chatter">
+                        <field name="message_follower_ids" widget="mail_followers"/>
+                        <field name="activity_ids" widget="mail_activity"/>
+                        <field name="message_ids" widget="mail_thread"/>
+                    </div>
+                </form>
+            </field>
+        </record>
+        <record id="action_technical_order" model="ir.actions.act_window">
+            <field name="name">technical order</field>
+            <field name="res_model">technical.order</field>
+            <field name="view_mode">tree,form</field>
+            <field name="domain">[]</field>
+            <field name="context">{}</field>
+            <field name="help" type="html">
+                <p class="oe_view_nocontent_create">
+                    Click to create a new technical_order.
+                </p>
+            </field>
+        </record>
+
+        <menuitem id="id_technical_order"
+                  name="Technical Order"/>
+
+        <menuitem id="id_technical_order_submenu"
+                  name="Store Orders"
+                  parent="id_technical_order"
+                  sequence="10"/>
+
+        <menuitem id="id_id_technical_order_store"
+                  name="Orders"
+                  parent="id_technical_order_submenu"
+                  sequence="10"
+                  action="action_technical_order"/>
+
+    </data>
+</odoo>

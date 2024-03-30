@@ -1,0 +1,121 @@
+<odoo>
+    <data>
+        <template id="report_technical_order_pdf">
+            <t t-call="web.html_container">
+                <t t-foreach="docs" t-as="doc">
+                    <t t-call="web.external_layout">
+
+                        <div class="page"
+                             t-attf-style="background-image:url('technical_order_module/static/description/image2.png');background-size:325mm 461mm; width:325mm; height:300mm;">
+                            <div class="text-left mb-4">
+                                <span style="font-size:40px;font-weight:bold">Order#</span>
+                                <span style="font-size:40px;font-weight:bold" t-field="doc.sequence"/>
+                            </div>
+                            <div class="row">
+                                <div class="col-6">
+                                    <strong style="font-size:25px;font-weight">Order:</strong>
+                                    <span style="font-size:25px;font-weight" t-field="doc.name"/>
+                                    <br/>
+                                    <strong style="font-size:25px;font-weight">Customer:</strong>
+                                    <span style="font-size:25px;font-weight" t-field="doc.customer"/>
+                                    <br/>
+                                    <strong style="font-size:25px;font-weight">request by:</strong>
+                                    <span style="font-size:25px;font-weight" t-field="doc.requested_by"/>
+                                    <br/>
+
+                                </div>
+                                <div class="col-6 ">
+                                    <strong style="font-size:25px;font-weight">start date:</strong>
+                                    <span style="font-size:25px;font-weight" t-field="doc.start_date"/>
+                                    <br/>
+                                    <strong style="font-size:25px;font-weight">end date:</strong>
+                                    <span style="font-size:25px;font-weight" t-field="doc.end_date"/>
+                                    <br/>
+                                    <strong style="font-size:25px;font-weight"> the state:</strong>
+                                    <span style="font-size:25px;font-weight" t-field="doc.status"/>
+                                    <br/>
+                                    <strong t-if="doc.status in ['reject']" style="font-size:25px;font-weight">reject reason:</strong>
+                                    <span style="font-size:25px;font-weight" t-field="doc.rejection_reason"/>
+                                    <br/>
+                                </div>
+                            </div>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+
+                            <table class="table table-sm o_main_table" style="direction:ltr;width:100%">
+                                <thead>
+                                    <tr>
+                                        <th class="text-left">
+                                            <span>Product</span>
+                                        </th>
+                                        <th>
+                                            <strong>Description</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Quantity</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Price</strong>
+                                        </th>
+                                        <th>
+                                            <strong>Total</strong>
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <t t-set="total_price" t-value="0"/>
+                                    <tr t-foreach="doc.order_lines_ids.filtered(lambda l: l.cost_price > 0)"
+                                        t-as="line">
+                                        <t t-set="total_price" t-value="total_price+line.total"/>
+
+                                        <td class="text-left" style="width:40% height:26% ">
+                                            <span t-field="line.product_id"/>
+                                        </td>
+                                        <td class="text-center" style="width:40% height:26% ">
+                                            <span t-field="line.description"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-field="line.quantity"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-field="line.cost_price"/>
+                                        </td>
+                                        <td class="text-center">
+                                            <span t-field="line.total"/>
+                                        </td>
+
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <br/>
+                            <div class="text-end">
+                                <strong style="font-size:40px;font-weight:bold">Total Price:</strong>
+                                <span style="font-size:30px;font-weight" t-esc="total_price"/>
+                            </div>
+
+
+                            <br/>
+
+
+                        </div>
+                    </t>
+                </t>
+            </t>
+        </template>
+    </data>
+</odoo>

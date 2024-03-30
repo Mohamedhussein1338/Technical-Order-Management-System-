@@ -1,0 +1,12 @@
+<odoo>
+
+     <record id="report_technical_order" model="ir.actions.report">
+            <field name="name">technical order details"</field>
+            <field name="model">technical.order</field>
+            <field name="report_type">qweb-pdf</field>
+            <field name="report_name">technical_order_module.report_technical_order_pdf</field>
+            <field name="report_file">technical_order_module.technical_order_report.xml</field>
+            <field name="binding_model_id" ref="model_technical_order"/>
+            <field name="binding_type">report</field>
+        </record>
+</odoo>
